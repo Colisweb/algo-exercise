@@ -4,7 +4,5 @@ include:
 compile:
   extends: .sbt-compile
 
-test exercise:
+test astar-tsp:
   extends: .sbt-test
-
-
