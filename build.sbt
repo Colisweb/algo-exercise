@@ -10,8 +10,8 @@ ThisBuild / pushRemoteCacheTo := Some(
 ThisBuild / isSnapshot := true
 
 
-
 libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.2.9" % Test
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
