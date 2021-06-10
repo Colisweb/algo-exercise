@@ -25,7 +25,7 @@ object MainCycle extends App {
   printResult(Cycle.shortCycle(Random.shuffle(Seq.fill(200)(Point(Random.nextInt(700), Random.nextInt(700))))))
 
   println("File 14 nodes")
-  printResult(Cycle.shortCycle(ReadFromResources.cycle("small_hole.txt")))
+  printResult(Cycle.shortCycle(ReadFromResources.cycle("14_nodes.txt")))
 
   println("File 52 nodes")
   printResult(Cycle.shortCycle(ReadFromResources.cycle("52_nodes.txt")))
