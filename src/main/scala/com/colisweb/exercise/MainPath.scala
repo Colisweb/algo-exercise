@@ -54,11 +54,32 @@ object MainPath extends App {
     shortestPath(problem) match {
       case Some(result) =>
         println(result.length)
-        println(result.points.reverse.mkString(","))
+        printPath(problem, result)
       case None         => println("no path found")
     }
     println()
 
+  }
+
+  def printPath(problem: PathProblem, path: Path): Unit = {
+    val points = problem.graph
+      .flatMap(edge => List(Point(edge.to.x.toInt, edge.to.y.toInt), Point(edge.from.x.toInt, edge.to.y.toInt)))
+      .distinct
+
+    val xs = path.points.map(_.x.toInt)
+    val ys = path.points.map(_.y.toInt)
+
+    for {
+      i <- xs.min - 1 to xs.max + 1
+      j <- ys.min - 1 to ys.max + 1
+    } {
+      if (problem.start == Point(i, j)) print("S")
+      else if (problem.end == Point(i, j)) print("E")
+      else if (path.points.contains(Point(i, j))) print(".")
+      else if (points.contains(Point(i, j))) print(" ")
+      else print("#")
+      if (j == ys.max + 1) println()
+    }
   }
 
 }
