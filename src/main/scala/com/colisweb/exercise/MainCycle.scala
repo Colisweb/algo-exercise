@@ -36,6 +36,9 @@ object MainCycle extends App {
   println("File 1002 nodes")
   printResult(Cycle.shortCycle(ReadFromResources.cycle("1002_nodes.txt")))
 
+  println("File 5915 nodes")
+  printResult(Cycle.shortCycle(ReadFromResources.cycle("5915_nodes.txt")))
+
   def printResult(path: Path): Unit = {
     println(path.length)
     println(path.points.reverse.mkString(","))
