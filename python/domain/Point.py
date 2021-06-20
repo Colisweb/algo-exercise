@@ -3,5 +3,5 @@ class Point:
         self.x = x
         self.y = y
 
-    def toString(self) -> str:
+    def __str__(self) -> str:
         return f"{self.x}x{self.y}"

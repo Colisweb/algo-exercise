@@ -20,7 +20,7 @@ class Edge:
         return self.sqr(self.from_.x - self.to.x) + self.sqr(self.from_.y - self.to.y)
 
     def distance(self) -> float:
-        return sqrt(self.distance2)
+        return sqrt(self.distance2())
 
-    def toString(self) -> str:
-        return f"{self.from_.toString()}-{self.to.toString()}"
+    def __str__(self) -> str:
+        return f"{self.from_}-{self.to}"
