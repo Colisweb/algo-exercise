@@ -1,4 +1,4 @@
-from Point import Point
+from .Point import Point
 from math import sqrt
 # all from https://stackoverflow.com/questions/33672412/python-functools-lru-cache-with-class-methods-release-object
 # from methodtools import lru_cache  # specific for class methods ? seems intern to instance
