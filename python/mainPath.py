@@ -1,14 +1,14 @@
 from domain.Point import Point
-from domain.Edge import Edge
 from domain.Path import Path
 from domain.PathProblem import PathProblem
 from parsing.readFromResources import path
 from shortestPath import shortestPath
 import random
 
+
 def printPath(problem: PathProblem, path: Path) -> None:
-    points = list(set(map(lambda edge: [Point(edge.to.x, edge.to.y), Point(edge.from_.x, edge.from_.y)], problem.graph)))
-    # points = list(set(map(lambda edge: [edge.to, edge.from_], problem.graph)))
+    points: "list[Point]" = list(set(map(lambda edge: [Point(edge.to.x, edge.to.y), Point(edge.from_.x, edge.from_.y)], problem.graph)))
+    # points: "list[Point]" = list(set(map(lambda edge: [edge.to, edge.from_], problem.graph)))
 
     xs: "list[int]" = map(lambda point: point.x, path.points)
     ys: "list[int]" = map(lambda point: point.y, path.points)
@@ -39,10 +39,11 @@ def printResult(title: str, problem: PathProblem) -> None:
         print("no path found")
     print("\n\n")
 
+
 def mainPath() -> None:
     # seed = args, from str to float
     # random.seed()
-    
+
     printResult("grid", path("grid.txt"))
     printResult("spiral", path("spiral.txt"))
     printResult("bunker", path("bunker.txt"))

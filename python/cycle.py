@@ -3,5 +3,5 @@ from domain.Path import Path
 from typing import Iterable
 
 
-def shortCycle(points: "Iterable[Point]") -> Path :
+def shortCycle(points: "Iterable[Point]") -> Path:
     return None

@@ -4,16 +4,19 @@ from parsing.readFromResources import cycle
 from cycle import shortCycle
 import random
 
+
 def pointsInGrid(width: int, height: int) -> "list[Point]":
     return [Point(x, y) for x in range(width) for y in range(height)]
+
 
 def printResult(path: Path) -> None:
     print(f"{path.length()}\n{','.join(path.points[::-1])}\n\n")
 
+
 def mainCycle() -> None:
     # seed = args, from str to float
     # random.seed()
-    
+
     shortCycle(iter(pointsInGrid(10, 8)))
 
     print("80 points in a 8x10 grid")

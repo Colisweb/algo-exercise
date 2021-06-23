@@ -9,9 +9,9 @@ from math import sqrt
 
 
 class Edge:
-    def __init__(self, from_: Point, to: Point):
-        self.from_ = from_
-        self.to = to
+    def __init__(self, from_: Point, to: Point) -> None:
+        self.from_: Point = from_
+        self.to: Point = to
 
     def sqr(self, d: float) -> float:
         return d**2
