@@ -18,20 +18,25 @@ def neighbors(row: int, col: int) -> "list[Point]":  # , lastRow: int, lastCol: 
     return map((lambda r, c: Point(r, c)), [(row, col + 1), (row, col - 1), (row + 1, col), (row - 1, col)])
 
 
-def unwrapPath(maze: "list[str]", x: int, y: int) -> Edge:
-    return Edge(Point(0, 0), Point(0, 0))  # how?
-
-
 def findChar(maze: "list[str]", c: str) -> Point:
-    return Point(0, 0)  # how?
+    row: int = next(index for index, val in enumerate(maze) if c in val, None)
+    col: int = maze[row].find(c)
+    return Point(row, col)
 
 
 def path(filename: str) -> PathProblem:
     with open(f"path/{filename}") as file:
         maze = file.read().splitlines()
 
-    # how?
-    pointList = [_ for _ in maze for _ in maze]
-    pointList = [unwrapPath(maze, x, y) for x in range(len(maze[0])) for y in range(len(maze))]
+    edges = [Edge(Point(rowIndex, colIndex), neighbor)
+            for rowIndex in range(maze)
+            for colIndex in range(maze[rowIndex])
+            if maze[rowIndex][colIndex] != "#"
+            for neighbor in neighbors(rowIndex, colIndex)
+            if neighbor.x < len(maze)
+            for neighborRow in maze[neighbor.x]
+            if neighbor.y < len(neighborRow)
+            for neighborCell in neighborRow[neighbor.y]
+            if neighborCell != "#"]
 
-    return PathProblem(pointList, findChar(maze, "S"), findChar(maze, "E"))
+    return PathProblem(edges, findChar(maze, "S"), findChar(maze, "E"))
