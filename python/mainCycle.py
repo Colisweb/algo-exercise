@@ -20,22 +20,32 @@ def mainCycle() -> None:
     shortCycle(iter(pointsInGrid(10, 8)))
 
     print("80 points in a 8x10 grid")
-    printResult(shortCycle(iter(random.shuffle(pointsInGrid(10, 8)))))
+    grid = pointsInGrid(10, 8)
+    random.shuffle(grid)
+    printResult(shortCycle(iter(grid)))
 
-    print("200 random points")
-    printResult(shortCycle(iter(random.shuffle([pointsInGrid(random.randint(0, 700), random.randint(0, 700)) for _ in range(200)]))))
+    return  # secu
 
-    print("File 14 nodes")
-    printResult(shortCycle(iter(cycle("14_nodes.txt"))))
+    # print("200 random points")
+    # grid = [pointsInGrid(random.randint(0, 700), random.randint(0, 700)) for _ in range(200)]
+    # random.shuffle(grid)
+    # printResult(shortCycle(iter(grid)))
 
-    print("File 52 nodes")
-    printResult(shortCycle(iter(cycle("52_nodes.txt"))))
+    # print("File 14 nodes")
+    # printResult(shortCycle(iter(cycle("14_nodes.txt"))))
 
-    print("File 202 nodes")
-    printResult(shortCycle(iter(cycle("202_nodes.txt"))))
+    # print("File 52 nodes")
+    # printResult(shortCycle(iter(cycle("52_nodes.txt"))))
 
-    print("File 1002 nodes")
-    printResult(shortCycle(iter(cycle("1002_nodes.txt"))))
+    # print("File 202 nodes")
+    # printResult(shortCycle(iter(cycle("202_nodes.txt"))))
 
-    print("File 5915 nodes")
-    printResult(shortCycle(iter(cycle("5915_nodes.txt"))))
+    # print("File 1002 nodes")
+    # printResult(shortCycle(iter(cycle("1002_nodes.txt"))))
+
+    # print("File 5915 nodes")
+    # printResult(shortCycle(iter(cycle("5915_nodes.txt"))))
+
+
+if __name__ == "__main__":
+    mainCycle()

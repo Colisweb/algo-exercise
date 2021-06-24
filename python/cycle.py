@@ -4,4 +4,4 @@ from typing import Iterable
 
 
 def shortCycle(points: "Iterable[Point]") -> Path:
-    return None
+    return Path()  # TODO: add algorithm

@@ -9,13 +9,15 @@ def unwrapCycle(line: str) -> Point:
 
 
 def cycle(filename: str) -> "list[Point]":
-    with open(f"cycle/{filename}") as file:
+    with open(f"resources/cycle/{filename}") as file:
         maze: "list[str]" = file.read().splitlines()
     return list(map(unwrapCycle, maze))
 
 
-def neighbors(row: int, col: int) -> "list[Point]":  # , lastRow: int, lastCol: int
-    return map((lambda r, c: Point(r, c)), [(row, col + 1), (row, col - 1), (row + 1, col), (row - 1, col)])
+def neighbors(row: int, col: int) -> "list[Point]":
+    return map(lambda r, c: Point(r, c),
+               [row, row, row + 1, row - 1],
+               [col + 1, col - 1, col, col])
 
 
 def findChar(maze: "list[str]", c: str) -> Point:
@@ -25,12 +27,12 @@ def findChar(maze: "list[str]", c: str) -> Point:
 
 
 def path(filename: str) -> PathProblem:
-    with open(f"path/{filename}") as file:
+    with open(f"resources/path/{filename}") as file:
         maze: "list[str]" = file.read().splitlines()
 
     edges: "list[Edge]" = [Edge(Point(rowIndex, colIndex), neighbor)
-                           for rowIndex in range(maze)
-                           for colIndex in range(maze[rowIndex])
+                           for rowIndex in range(len(maze))
+                           for colIndex in range(len(maze[rowIndex]))
                            if maze[rowIndex][colIndex] != "#"
                            for neighbor in neighbors(rowIndex, colIndex)
                            if neighbor.x < len(maze)
