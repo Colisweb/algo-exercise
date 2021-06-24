@@ -7,14 +7,13 @@ import random
 
 
 def printPath(problem: PathProblem, path: Path) -> None:
-    points: "list[Point]" = list(set(map(lambda edge: (Point(edge.to.x, edge.to.y), Point(edge.from_.x, edge.from_.y)), problem.graph)))
-    # points: "list[Point]" = list(set(map(lambda edge: (edge.to, edge.from_), problem.graph)))
+    points: "list[Point]" = sum(map(lambda edge: (edge.to, edge.from_), problem.graph), ())
 
-    xs: "list[int]" = list(map(lambda point: point.x, path.points))
-    ys: "list[int]" = list(map(lambda point: point.y, path.points))
+    xs: "list[int]" = tuple(map(lambda point: point.x, path.points))
+    ys: "list[int]" = tuple(map(lambda point: point.y, path.points))
 
-    for i in range(min(xs)-1, max(xs)+1):
-        for j in range(min(ys)-1, max(ys)+1):
+    for i in range(min(xs)-1, max(xs)+2):
+        for j in range(min(ys)-1, max(ys)+2):
             point = Point(i, j)
             if problem.start == point:
                 print("S", end="")
@@ -27,7 +26,6 @@ def printPath(problem: PathProblem, path: Path) -> None:
             else:
                 print("#", end="")
         print()
-    exit()
 
 
 def printResult(title: str, problem: PathProblem) -> None:
@@ -36,8 +34,6 @@ def printResult(title: str, problem: PathProblem) -> None:
     if result: # verify monad
         print(result.length())
         printPath(problem, result)
-        print("ok print path")
-        exit()
     else:
         print("no path found")
     print("\n\n")

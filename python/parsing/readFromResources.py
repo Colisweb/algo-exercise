@@ -35,10 +35,8 @@ def path(filename: str) -> PathProblem:
                            for colIndex in range(len(maze[rowIndex]))
                            if maze[rowIndex][colIndex] != "#"
                            for neighbor in neighbors(rowIndex, colIndex)
-                           if neighbor.x < len(maze)
-                           for neighborRow in maze[neighbor.x]
-                           if neighbor.y < len(neighborRow)
-                           for neighborCell in neighborRow[neighbor.y]
-                           if neighborCell != "#"]
+                           if neighbor.x >= 0 and neighbor.x < len(maze)
+                           and neighbor.y >= 0 and neighbor.y < len(maze[neighbor.x])
+                           and maze[neighbor.x][neighbor.y] != "#"]
 
     return PathProblem(edges, findChar(maze, "S"), findChar(maze, "E"))

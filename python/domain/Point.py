@@ -5,3 +5,9 @@ class Point:
 
     def __str__(self) -> str:
         return f"{self.x}x{self.y}"
+
+    def __eq__(self, other: object) -> bool:
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self) -> int:
+        return hash((self.x, self.y))
