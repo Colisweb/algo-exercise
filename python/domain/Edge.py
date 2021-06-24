@@ -24,3 +24,9 @@ class Edge:
 
     def __str__(self) -> str:
         return f"{self.from_}-{self.to}"
+
+    def __eq__(self, other: object) -> bool:
+        return self.from_ == other.from_ and self.to == other.to
+
+    def __hash__(self) -> int:
+        return hash((self.from_, self.to))
