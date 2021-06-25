@@ -31,7 +31,7 @@ def printPath(problem: PathProblem, path: Path) -> None:
 def printResult(title: str, problem: PathProblem) -> None:
     print(f"{title}\nfrom {problem.start} to {problem.end}")
     result: Path = shortestPath(problem)
-    if result: # verify monad
+    if result.length():
         print(result.length())
         printPath(problem, result)
     else:

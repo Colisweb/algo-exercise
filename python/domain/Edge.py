@@ -13,14 +13,14 @@ class Edge:
         self.from_: Point = from_
         self.to: Point = to
 
-    def sqr(self, d: float) -> float:
+    def _sqr(self, d: float) -> float:
         return d**2
 
-    def distance2(self) -> float:
-        return self.sqr(self.from_.x - self.to.x) + self.sqr(self.from_.y - self.to.y)
+    def _distance2(self) -> float:
+        return self._sqr(self.from_.x - self.to.x) + self._sqr(self.from_.y - self.to.y)
 
     def distance(self) -> float:
-        return sqrt(self.distance2())
+        return sqrt(self._distance2())
 
     def __str__(self) -> str:
         return f"{self.from_}-{self.to}"
