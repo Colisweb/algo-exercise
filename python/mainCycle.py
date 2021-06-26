@@ -20,9 +20,7 @@ def mainCycle() -> None:
     shortCycle(iter(pointsInGrid(10, 8)))
 
     print("80 points in a 8x10 grid")
-    grid = pointsInGrid(10, 8)
-    random.shuffle(grid)
-    printResult(shortCycle(iter(grid)))
+    printResult(shortCycle(iter(shuffle(pointsInGrid(10, 8)))))
 
     return  # secu
 
@@ -45,6 +43,11 @@ def mainCycle() -> None:
 
     # print("File 5915 nodes")
     # printResult(shortCycle(iter(cycle("5915_nodes.txt"))))
+
+
+def shuffle(grid: list) -> list:
+    random.shuffle(grid)
+    return grid
 
 
 if __name__ == "__main__":

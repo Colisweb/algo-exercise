@@ -6,7 +6,9 @@ from sys import getrecursionlimit
 from itertools import groupby
 
 
-def shortestPath(pathProblem: PathProblem) -> Path:
+def shortestPath(pathProblem: PathProblem, isGrid: bool = True) -> Path:
+    if not isGrid:
+        return Path([pathProblem.start] + aStar(pathProblem.graph, pathProblem.start, pathProblem.end, [], []))
     return Path(straightener(pathProblem.graph, unlooper([pathProblem.start] + aStar(pathProblem.graph, pathProblem.start, pathProblem.end, [], []))))
 
 
