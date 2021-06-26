@@ -3,5 +3,5 @@ from domain.Path import Path
 from typing import Iterable
 
 
-def shortCycle(points: "Iterable[Point]") -> Path:
-    return Path()  # TODO: add algorithm
+def shortCycle(points: "list[Point]") -> Path:
+    return Path(points)  # TODO: add algorithm

@@ -4,13 +4,13 @@ from domain.PathProblem import PathProblem
 
 
 def unwrapCycle(line: str) -> Point:
-    _, x, y = line.split(" ")
-    return Point(x, y)
+    _, x, y, *_ = line.split(" ")
+    return Point(float(x), float(y))
 
 
 def cycle(filename: str) -> "list[Point]":
     with open(f"resources/cycle/{filename}") as file:
-        maze: "list[str]" = file.read().splitlines()
+        maze: "list[str]" = [line for line in file.read().splitlines() if line]
     return list(map(unwrapCycle, maze))
 
 
