@@ -28,7 +28,7 @@ def aStar(graph: "list[Edge]", current: Point, end: Point, explored: "list[Point
                             and edge.to not in explored]
 
     if notExploredNeighbors:
-        notExploredNeighbors = sorted(notExploredNeighbors, key=lambda x: Edge(x, end).distance())
+        notExploredNeighbors = sorted(notExploredNeighbors, key=lambda pt: Edge(pt, end).distance())
         current = notExploredNeighbors[0]
         notExplored += notExploredNeighbors[1::-1]  # voir sans le reverse
 
