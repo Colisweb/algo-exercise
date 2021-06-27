@@ -29,8 +29,8 @@ def gridFull(width: int, height: int) -> "list[Edge]":
 def printPath(problem: PathProblem, path: Path) -> None:
     points: "list[Point]" = sum(map(lambda edge: (edge.to, edge.from_), problem.graph), ())
 
-    xs: "list[int]" = tuple(map(lambda point: point.x, path.points))
-    ys: "list[int]" = tuple(map(lambda point: point.y, path.points))
+    xs: "list[int]" = tuple(map(lambda point: int(point.x), path.points))
+    ys: "list[int]" = tuple(map(lambda point: int(point.y), path.points))
 
     for i in range(min(xs)-1, max(xs)+2):
         for j in range(min(ys)-1, max(ys)+2):

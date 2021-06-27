@@ -5,6 +5,7 @@ from cycle import shortCycle
 import random
 from functools import lru_cache
 import time
+import matplotlib.pyplot as plt
 
 
 def timing(f):
@@ -23,8 +24,17 @@ def pointsInGrid(width: int, height: int) -> "list[Point]":
 
 
 def printResult(path: Path) -> None:
-    print(f"{path.length()}\n{','.join(map(lambda x: str(x), path.points[::-1]))}\n\n")
+    length = path.length()
+    print(f"{length}\n{','.join(map(lambda x: str(x), path.points[::-1]))}\n\n")
     # display gaph too, because, ya know... => visual
+
+    xs: "list[float]" = tuple(map(lambda point: point.x, path.points))
+    ys: "list[float]" = tuple(map(lambda point: point.y, path.points))
+    plt.plot(xs, ys, c='orange')
+    plt.scatter(xs[1:], ys[1:], c='red', marker='x')
+    plt.scatter(xs[0], ys[0], c='green', marker='o')
+    plt.title(length)
+    plt.show()
 
 
 # @timing

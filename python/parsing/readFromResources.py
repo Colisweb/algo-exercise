@@ -5,7 +5,7 @@ from domain.PathProblem import PathProblem
 
 def unwrapCycle(line: str) -> Point:
     _, x, y, *_ = line.split(" ")
-    return Point(float(x), float(y))
+    return Point(x, y)
 
 
 def cycle(filename: str) -> "list[Point]":
@@ -36,7 +36,7 @@ def path(filename: str) -> PathProblem:
                            if maze[rowIndex][colIndex] != "#"
                            for neighbor in neighbors(rowIndex, colIndex)
                            if neighbor.x >= 0 and neighbor.x < len(maze)
-                           and neighbor.y >= 0 and neighbor.y < len(maze[neighbor.x])
-                           and maze[neighbor.x][neighbor.y] != "#"]
+                           and neighbor.y >= 0 and neighbor.y < len(maze[int(neighbor.x)])
+                           and maze[int(neighbor.x)][int(neighbor.y)] != "#"]
 
     return PathProblem(edges, findChar(maze, "S"), findChar(maze, "E"))
