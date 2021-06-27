@@ -1,7 +1,6 @@
 from domain.Point import Point
 from domain.Edge import Edge
 from domain.Path import Path
-import random
 import numpy as np
 
 

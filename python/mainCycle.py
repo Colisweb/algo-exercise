@@ -4,18 +4,7 @@ from parsing.readFromResources import cycle
 from cycle import shortCycle
 import random
 from functools import lru_cache
-import time
 import matplotlib.pyplot as plt
-
-
-def timing(f):
-    def wrap(*args, **kwargs):
-        time1 = time.time()
-        ret = f(*args, **kwargs)
-        time2 = time.time()
-        print('{:s} function took {:.3f} ms'.format(f.__name__, (time2-time1)*1000.0))
-        return ret
-    return wrap
 
 
 @lru_cache()
@@ -38,7 +27,6 @@ def printResult(path: Path) -> None:
     plt.show()
 
 
-# @timing
 def mainCycle() -> None:
     # seed = args, from str to float
     # random.seed()
