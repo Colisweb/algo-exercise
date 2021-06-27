@@ -19,13 +19,19 @@ def algoProba(points: "list[Point]", current: Point) -> "list[Point]":
     # transforme list en suite mathématiques
     distances = [1 / Edge(current, pt).distance() for pt in newPoints][::-1]
     max = sum(distances)
-    percentages = [sum(distances[:id + 1]) / max for id in range(distances)]
+    percentages = [sum(distances[:id + 1]) / max for id in range(len(distances))]
 
     # fait tirage au sort
-    randVal = random.randint(0, 100)
+    randVal = random.randint(0, 100)/100
 
     # prend premier point de valeur > à tirage
-    index = len(newPoints) - np.searchsorted([val > randVal for val in percentages], True, side='left')
+    index = len(percentages) - np.searchsorted([val > randVal for val in percentages], True, side='left') + 1
+
+    # tmp : à débuger
+    if index == len(newPoints):
+        index -= 1
+    if index > len(newPoints):
+        index -= 2
 
     selected = newPoints.pop(index)
 
