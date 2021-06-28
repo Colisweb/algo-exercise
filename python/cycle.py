@@ -32,7 +32,7 @@ def algoProba(points: "list[Point]", current: Point) -> "list[Point]":
 
     newPoints = sorted(points, key=lambda pt: Edge(current, pt).distance())
 
-    distances = [1 / Edge(current, pt).distance() if current != pt else 0 for pt in newPoints][::-1]
+    distances = [1 / Edge(current, pt).distance() if current != pt else 0 for pt in newPoints[:10]][::-1]
     max = sum(distances)
     percentages = [sum(distances[:id + 1]) / max for id in range(len(distances))]
 

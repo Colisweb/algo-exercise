@@ -36,14 +36,14 @@ def mainCycle() -> None:
     # printResult(shortCycle(shuffle(pointsInGrid(10, 8))))
 
     # take 40ms to generate only
-    print("200 random points")
-    printResult(shortCycle(shuffle([val for liste in [pointsInGrid(random.randint(0, 700), random.randint(0, 700)) for _ in range(200)] for val in liste])))
+    # print("200 random points")
+    # printResult(shortCycle(shuffle([val for liste in [pointsInGrid(random.randint(0, 700), random.randint(0, 700)) for _ in range(200)] for val in liste])))
 
     # print("File 14 nodes")
     # printResult(shortCycle(cycle("14_nodes.txt")))
 
-    # print("File 52 nodes")
-    # printResult(shortCycle(cycle("52_nodes.txt")))
+    print("File 52 nodes")
+    printResult(shortCycle(cycle("52_nodes.txt")))
 
     # print("File 202 nodes")
     # printResult(shortCycle(cycle("202_nodes.txt")))
