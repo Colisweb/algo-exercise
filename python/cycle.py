@@ -6,10 +6,8 @@ import numpy as np
 
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
-    return Path(looper(points, lambda points: Path([points[0]] + algoProba(points[1:], points[0]))))
-
-
-# straightener : take "4 points windows" and try to swap the 2nd and the 3rd
+    return Path(straightener(looper(points, lambda points: Path([points[0]] + algoProba(points[1:], points[0])))))
+    # return Path(looper(looper(points, lambda points: Path([points[0]] + algoProba(points[1:], points[0]))), lambda points: straightener(points)))
 
 
 def looper(points: "list[Point]", method, tries: int = 10, best: float = 10000, associated: Path = None) -> "list[Point]":
@@ -50,3 +48,17 @@ def algoProba(points: "list[Point]", current: Point) -> "list[Point]":
     selected = newPoints.pop(index)
 
     return [selected] + algoProba(newPoints, selected)
+
+
+# straightener : take "4 points windows" and try to swap the 2nd and the 3rd
+def straightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
+    if currentPos + 4 > len(points):
+        return points
+
+    currentWindow = points[currentPos:currentPos + 4]
+
+    if Path(currentWindow).length() < Path([currentWindow[0], currentWindow[2], currentWindow[1], currentWindow[4]]).length():
+        points[currentPos + 1] = currentWindow[2]
+        points[currentPos + 2] = currentWindow[1]
+
+    return straightener(points, currentPos + 1)
