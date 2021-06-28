@@ -15,7 +15,6 @@ def pointsInGrid(width: int, height: int) -> "list[Point]":
 def printResult(path: Path) -> None:
     length = path.length()
     print(f"{length}\n{','.join(map(lambda x: str(x), path.points[::-1]))}\n\n")
-    # display gaph too, because, ya know... => visual
 
     xs: "list[float]" = tuple(map(lambda point: point.x, path.points))
     ys: "list[float]" = tuple(map(lambda point: point.y, path.points))
@@ -37,17 +36,17 @@ def mainCycle() -> None:
     # printResult(shortCycle(shuffle(pointsInGrid(10, 8))))
 
     # take 40ms to generate only
-    # print("200 random points")
-    # printResult(shortCycle(shuffle([pointsInGrid(random.randint(0, 700), random.randint(0, 700)) for _ in range(200)])))
+    print("200 random points")
+    printResult(shortCycle(shuffle([val for liste in [pointsInGrid(random.randint(0, 700), random.randint(0, 700)) for _ in range(200)] for val in liste])))
 
-    print("File 14 nodes")
-    printResult(shortCycle(cycle("14_nodes.txt")))
-    return
-    print("File 52 nodes")
-    printResult(shortCycle(cycle("52_nodes.txt")))
+    # print("File 14 nodes")
+    # printResult(shortCycle(cycle("14_nodes.txt")))
 
-    print("File 202 nodes")
-    printResult(shortCycle(cycle("202_nodes.txt")))
+    # print("File 52 nodes")
+    # printResult(shortCycle(cycle("52_nodes.txt")))
+
+    # print("File 202 nodes")
+    # printResult(shortCycle(cycle("202_nodes.txt")))
 
     # more than 1000 depth recursion allowed by python
     # print("File 1002 nodes")
