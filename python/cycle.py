@@ -7,7 +7,7 @@ from sys import float_info
 
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
-    generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]))
+    generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]])
     optimized = looper(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated)
     return Path(optimized)
 
