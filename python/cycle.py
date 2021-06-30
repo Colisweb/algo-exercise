@@ -3,13 +3,32 @@ from domain.Edge import Edge
 from domain.Path import Path
 import numpy as np
 from sys import float_info
+import matplotlib.pyplot as plt
+
+
+def saveGraph(points, nom):
+    path = Path(points)
+    xs: "list[float]" = tuple(map(lambda point: point.x, path.points))
+    ys: "list[float]" = tuple(map(lambda point: point.y, path.points))
+    plt.plot(xs, ys, c='orange')
+    plt.scatter(xs[1:-1], ys[1:-1], c='red', marker='x')
+    plt.scatter(xs[0], ys[0], c='blue', marker='o')
+    plt.title(f"{path.length():,.4f}")
+    plt.savefig(nom)
+    plt.clf()
 
 
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
-    generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]])
-    straightened = looper(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated)
-    uncrossed = uncrosser(straightened)
+    # generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]])
+    generated = [Point(16.47, 96.1), Point(16.53, 97.38), Point(16.3, 97.38), Point(17.2, 96.29), Point(19.41, 97.13), Point(22.0, 96.05), Point(21.52, 95.59), Point(20.09, 94.55), Point(20.09, 92.54), Point(22.39, 93.37), Point(25.23, 97.24), Point(20.47, 97.02), Point(14.05, 98.12), Point(16.47, 94.44), Point(16.47, 96.1)]
+    saveGraph(generated, "generated")
+    straightened = looper(generated, lambda points: straightener(points), tries=2, best=Path(generated).length(), associated=generated.copy())
+    saveGraph(straightened, "straightened")
+    uncrossed = looper(straightened, lambda points: uncrosser(points), tries=0, best=Path(straightened).length(), associated=straightened.copy())
+    # print([str(point) for point in uncrossed])
+    saveGraph(uncrossed, "uncrossed")
+    exit()
     return Path(uncrossed)
 
 
@@ -76,28 +95,39 @@ def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
     if currentPos + 2 > len(points):
         return points
 
+    # id points 4-5 et 11-12
+
     currentSegment = Edge(points[currentPos], points[currentPos + 1])
-    cutted = [(id, Edge(point, points[id + 1])) for id, point in enumerate(points) if currentSegment.cross(Edge(point, points[id + 1]))]
+    print("\n\n\ncurrent segment: ", currentPos, currentPos + 1, str(currentSegment))
+    cutted = [(id, Edge(point, points[id + 1])) for id, point in enumerate(points[:-1]) if currentSegment.cross(Edge(point, points[id + 1]))]
+    # -- cutted = [(id, Edge(point, points[id + 1])) for id, point in enumerate(points[:-1]) if currentSegment.cross(Edge(point, points[id + 1]))]
     # cutted = [Edge(point, points[currentPos + id + 1]) for id, point in enumerate(points[currentPos + 1:]) if Edge(point, points[currentPos + id + 1]).cross(currentSegment)]
 
-    if len(cutted) == 1:
-        nextSegment = Edge(points[currentPos + 1], points[currentPos + 2])
-        nextCutted = [edge for _, edge in cutted if nextSegment.cross(edge)]
+    print("nb cutted : ", len(cutted))
+    print([(id, id + 1, str(Edge(points[id], points[id + 1]))) for id, _ in cutted])
+    # if len(cutted) == 1:
+    #     if currentPos + 3 > len(points):
+    #         nextSegment = Edge(points[currentPos + 1], points[currentPos + 2])
+    #         nextCutted = [edge for _, edge in cutted if nextSegment.cross(edge)]
+    #     else:
+    #         nextCutted = []
 
-        index = cutted[0][0]
+    #     index = cutted[0][0]
+    #     print(index)
 
-        if len(nextCutted) == 1:
-            if index < currentPos:
-                index -= 1
-            points.insert(index, points.pop(currentPos + 1))
+    #     if len(nextCutted) == 1:
+    #         if index < currentPos:
+    #             index -= 1
+    #         points.insert(index, points.pop(currentPos + 1))
 
-        else:
-            if index < currentPos:
-                begin = index + 1
-                end = currentPos
-            else:
-                begin = currentPos + 1
-                end = index
-            points[begin:end] = points[begin:end:-1]
+    #     else:
+    #         if index < currentPos:
+    #             begin = index + 1
+    #             end = currentPos
+    #         else:
+    #             begin = currentPos + 1
+    #             end = index
+    #         print(begin, end)
+    #         points[begin:end] = points[begin:end][::-1]
 
     return uncrosser(points, currentPos + 1)

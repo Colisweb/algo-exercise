@@ -37,10 +37,35 @@ class Edge:
         return m, b
 
     def cross(self, other: object) -> bool:
-        mSelf, bSelf = self._equation()
-        mOther, bOther = other._equation()
+        if self == other or self.from_.x == self.to.x or other.from_.x == other.to.x:
+            # if self == other or self.to == other.from_ or self.from_ == other.to:
+            return False
+
+        try:
+            mSelf, bSelf = self._equation()
+            mOther, bOther = other._equation()
+        except Exception:
+            print(str(self), str(other))
+            exit()
 
         if mSelf == mOther:
             return False
 
-        return min(self.from_.x, self.to.x) < (bOther - bSelf) / (mSelf - mOther) < max(self.from_.x, self.to.x)
+        x = (bOther - bSelf) / (mSelf - mOther)
+        y = mSelf * x + bSelf
+
+        test = (min(self.from_.x, self.to.x) < x < max(self.from_.x, self.to.x) and
+                min(other.from_.x, other.to.x) < x < max(other.from_.x, other.to.x))
+                # min(self.from_.y, self.to.y) < y < max(self.from_.y, self.to.y))
+
+        if test:
+            print("point d'intersection :")
+            print(x, y)
+            print("points des segments :")
+            print(str(self.from_), str(self.to))
+            print(str(other.from_), str(other.to))
+            print("min et max :")
+            print(min(self.from_.x, self.to.x), max(self.from_.x, self.to.x))
+            print(min(self.from_.y, self.to.y), max(self.from_.y, self.to.y))
+
+        return test
