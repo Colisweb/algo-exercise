@@ -46,26 +46,14 @@ class Edge:
             mOther, bOther = other._equation()
         except Exception:
             print(str(self), str(other))
+            print("fail")
             exit()
 
         if mSelf == mOther:
             return False
 
         x = (bOther - bSelf) / (mSelf - mOther)
-        y = mSelf * x + bSelf
+        # y = mSelf * x + bSelf
 
-        test = (min(self.from_.x, self.to.x) < x < max(self.from_.x, self.to.x) and
+        return (min(self.from_.x, self.to.x) < x < max(self.from_.x, self.to.x) and
                 min(other.from_.x, other.to.x) < x < max(other.from_.x, other.to.x))
-                # min(self.from_.y, self.to.y) < y < max(self.from_.y, self.to.y))
-
-        if test:
-            print("point d'intersection :")
-            print(x, y)
-            print("points des segments :")
-            print(str(self.from_), str(self.to))
-            print(str(other.from_), str(other.to))
-            print("min et max :")
-            print(min(self.from_.x, self.to.x), max(self.from_.x, self.to.x))
-            print(min(self.from_.y, self.to.y), max(self.from_.y, self.to.y))
-
-        return test
