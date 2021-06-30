@@ -30,3 +30,17 @@ class Edge:
 
     def distance(self) -> float:
         return sqrt(self._distance2())
+
+    def _equation(self) -> "tuple[float, float]":
+        m = (self.to.y - self.from_.y) / (self.to.x - self.from_.x)
+        b = self.to.y - m * self.to.x
+        return m, b
+
+    def cross(self, other: object) -> bool:
+        mSelf, bSelf = self._equation()
+        mOther, bOther = other._equation()
+
+        if mSelf == mOther:
+            return False
+
+        return min(self.from_.x, self.to.x) < (bOther - bSelf) / (mSelf - mOther) < max(self.from_.x, self.to.x)

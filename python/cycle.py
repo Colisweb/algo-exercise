@@ -8,8 +8,9 @@ from sys import float_info
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
     generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]])
-    optimized = looper(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated)
-    return Path(optimized)
+    straightened = looper(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated)
+    uncrossed = uncrosser(straightened)
+    return Path(uncrossed)
 
 
 def looper(points: "list[Point]", method, tries: int = 20, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
@@ -69,3 +70,34 @@ def straightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
         points[currentPos + 2] = currentWindow[1]
 
     return straightener(points, currentPos + 1)
+
+
+def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
+    if currentPos + 2 > len(points):
+        return points
+
+    currentSegment = Edge(points[currentPos], points[currentPos + 1])
+    cutted = [(id, Edge(point, points[id + 1])) for id, point in enumerate(points) if currentSegment.cross(Edge(point, points[id + 1]))]
+    # cutted = [Edge(point, points[currentPos + id + 1]) for id, point in enumerate(points[currentPos + 1:]) if Edge(point, points[currentPos + id + 1]).cross(currentSegment)]
+
+    if len(cutted) == 1:
+        nextSegment = Edge(points[currentPos + 1], points[currentPos + 2])
+        nextCutted = [edge for _, edge in cutted if nextSegment.cross(edge)]
+
+        index = cutted[0][0]
+
+        if len(nextCutted) == 1:
+            if index < currentPos:
+                index -= 1
+            points.insert(index, points.pop(currentPos + 1))
+
+        else:
+            if index < currentPos:
+                begin = index + 1
+                end = currentPos
+            else:
+                begin = currentPos + 1
+                end = index
+            points[begin:end] = points[begin:end:-1]
+
+    return uncrosser(points, currentPos + 1)
