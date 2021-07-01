@@ -21,19 +21,24 @@ def saveGraph(points, nom):
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
     generated = looper_generate(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]], tries=5)
-    # generated = [Point(16.47, 96.1), Point(17.2, 96.29), Point(16.3, 97.38), Point(16.53, 97.38), Point(16.47, 94.44), Point(20.09, 92.54), Point(20.09, 94.55), Point(20.47, 97.02), Point(19.41, 97.13), Point(21.52, 95.59), Point(22.0, 96.05), Point(25.23, 97.24), Point(22.39, 93.37), Point(14.05, 98.12), Point(16.47, 96.1)]
 
     saveGraph(generated, "generated")
-    # print([str(point) for point in generated[::-1]])
+    print([str(point) for point in generated[::-1]])
 
+    print("straight")
     straightened = looper_optimize(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated.copy())
-    # saveGraph(straightened, "straightened")
+    saveGraph(straightened, "straightened")
 
+    # print("optimize")
     uncrossed = looper_optimize(straightened, lambda points: uncrosser(points), best=Path(straightened).length(), associated=straightened.copy())
-    # saveGraph(uncrossed, "uncrossed")
+    saveGraph(uncrossed, "uncrossed")
+
+    print("wide straight")
+    straightened = looper_optimize(uncrossed, lambda points: wideStraightener(points), best=Path(uncrossed).length(), associated=uncrossed.copy())
+    saveGraph(straightened, "wide straightened")
 
     # print([str(point) for point in uncrossed])
-    # exit()
+    exit()
     return Path(uncrossed)
 
 
@@ -55,6 +60,7 @@ def looper_optimize(points: "list[Point]", method, best: float = float_info.max,
     path = Path(method(points))
     length = path.length()
 
+    print("loop")
     if length < best:
         best = length
         associated = path.points
@@ -121,25 +127,48 @@ def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
     # print([(id, id + 1, str(Edge(points[id], points[id + 1]))) for id, _ in cutted])
 
     if len(cutted) == 1:
-        # print("heavy")
-        index = cutted[0][0]
+        if currentPos + 2 > len(points) and cutted[0][1].cross(Edge(points[currentPos + 1], points[currentPos + 2])):
+            points.insert(cutted[0][0], points.pop(currentPos + 1))
 
-        if index < currentPos:
-            begin = index + 1
-            end = currentPos
         else:
-            begin = currentPos + 1
-            end = index
-        end += 1
+            index = cutted[0][0]
 
-        points[begin:end] = points[begin:end][::-1]
+            if index < currentPos:
+                begin = index + 1
+                end = currentPos
+            else:
+                begin = currentPos + 1
+                end = index
+            end += 1
+
+            points[begin:end] = points[begin:end][::-1]
 
     elif len(cutted) == 2 and cutted[0][0] + 1 == cutted[1][0]:
-        # print("light")
-        index = cutted[0][0] + 1
-
-        # supprime point plus loin pour le mettre plus près ok
-        # supprime point plus près pour le mettre plus loin à vérifier
-        points.insert(index, points.pop(currentPos + 1))
+        points.insert(cutted[0][0] + 1, points.pop(currentPos + 1))
 
     return uncrosser(points, currentPos + 1)
+
+
+def wideStraightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
+    if currentPos + 5 > len(points):
+        return points
+
+    currentWindow = points[currentPos:currentPos + 5]
+
+    # faire une liste avec les 6 combinaisons
+    combination = [[currentWindow[1], currentWindow[2], currentWindow[3]],
+                   [currentWindow[1], currentWindow[3], currentWindow[2]],
+                   [currentWindow[2], currentWindow[1], currentWindow[3]],
+                   [currentWindow[2], currentWindow[3], currentWindow[1]],
+                   [currentWindow[3], currentWindow[1], currentWindow[2]],
+                   [currentWindow[3], currentWindow[2], currentWindow[1]]]
+
+    # trier les combinaisons par distance et prendre le premier élément
+    best = sorted(combination, key=lambda comb: Path(comb).length())[0]
+
+    # attribuer les 3 points aveuglément (même si même points)
+    points[currentPos + 1] = best[0]
+    points[currentPos + 2] = best[1]
+    points[currentPos + 3] = best[2]
+
+    return wideStraightener(points, currentPos + 1)
