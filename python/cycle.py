@@ -20,23 +20,24 @@ def saveGraph(points, nom):
 
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
-    generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]], tries=5)
+    generated = looper_generate(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]], tries=5)
     # generated = [Point(16.47, 96.1), Point(17.2, 96.29), Point(16.3, 97.38), Point(16.53, 97.38), Point(16.47, 94.44), Point(20.09, 92.54), Point(20.09, 94.55), Point(20.47, 97.02), Point(19.41, 97.13), Point(21.52, 95.59), Point(22.0, 96.05), Point(25.23, 97.24), Point(22.39, 93.37), Point(14.05, 98.12), Point(16.47, 96.1)]
-    # print([str(point) for point in generated[::-1]])
 
     saveGraph(generated, "generated")
-    straightened = looper(generated, lambda points: straightener(points), tries=5, best=Path(generated).length(), associated=generated.copy())
-    saveGraph(straightened, "straightened")
-    uncrossed = looper(straightened, lambda points: uncrosser(points), tries=10, best=Path(straightened).length(), associated=straightened.copy())
-    # print([str(point) for point in uncrossed])
+    # print([str(point) for point in generated[::-1]])
+
+    straightened = looper_optimize(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated.copy())
+    # saveGraph(straightened, "straightened")
+
+    uncrossed = looper_optimize(straightened, lambda points: uncrosser(points), best=Path(straightened).length(), associated=straightened.copy())
     # saveGraph(uncrossed, "uncrossed")
-    straightened = looper(uncrossed, lambda points: straightener(points), tries=5, best=Path(uncrossed).length(), associated=uncrossed.copy())
-    saveGraph(straightened, "straightened2")
+
+    # print([str(point) for point in uncrossed])
     # exit()
     return Path(uncrossed)
 
 
-def looper(points: "list[Point]", method, tries: int = 20, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
+def looper_generate(points: "list[Point]", method, tries: int = 20, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
     path = Path(method(points))
     length = path.length()
 
@@ -47,7 +48,19 @@ def looper(points: "list[Point]", method, tries: int = 20, best: float = float_i
     if not tries:
         return associated
 
-    return looper(points, method, tries - 1, best, associated)
+    return looper_generate(points, method, tries - 1, best, associated)
+
+
+def looper_optimize(points: "list[Point]", method, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
+    path = Path(method(points))
+    length = path.length()
+
+    if length < best:
+        best = length
+        associated = path.points
+        return looper_optimize(points, method, best, associated)
+
+    return associated
 
 
 def algoProba(points: "list[Point]", current: Point) -> "list[Point]":
