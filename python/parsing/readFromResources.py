@@ -14,7 +14,7 @@ def cycle(filename: str) -> "list[Point]":
     return list(map(unwrapCycle, maze))
 
 
-def neighbors(row: int, col: int) -> "list[Point]":
+def neighbors(row: int, col: int) -> "iter[Point]":
     return map(lambda r, c: Point(r, c),
                [row, row, row + 1, row - 1],
                [col + 1, col - 1, col, col])

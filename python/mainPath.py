@@ -5,8 +5,10 @@ from domain.PathProblem import PathProblem
 from parsing.readFromResources import path
 from shortestPath import shortestPath
 import random
+from functools import lru_cache
 
 
+@lru_cache()
 def gridNorthEast(width: int, height: int) -> "list[Edge]":
     return [elem for elemList in [[Edge(Point(x, y), Point(x + 1, y)),
                                    Edge(Point(x, y), Point(x, y + 1)),
@@ -27,10 +29,10 @@ def gridFull(width: int, height: int) -> "list[Edge]":
 
 
 def printPath(problem: PathProblem, path: Path) -> None:
-    points: "list[Point]" = sum(map(lambda edge: (edge.to, edge.from_), problem.graph), ())
+    points: "iter[Point]" = sum(map(lambda edge: (edge.to, edge.from_), problem.graph), ())
 
-    xs: "list[int]" = tuple(map(lambda point: int(point.x), path.points))
-    ys: "list[int]" = tuple(map(lambda point: int(point.y), path.points))
+    xs: "tuple[int]" = tuple(map(lambda point: int(point.x), path.points))
+    ys: "tuple[int]" = tuple(map(lambda point: int(point.y), path.points))
 
     for i in range(min(xs)-1, max(xs)+2):
         for j in range(min(ys)-1, max(ys)+2):
