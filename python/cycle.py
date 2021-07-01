@@ -20,16 +20,19 @@ def saveGraph(points, nom):
 
 def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
-    # generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]])
-    generated = [Point(16.47, 96.1), Point(17.2, 96.29), Point(16.53, 97.38), Point(16.3, 97.38), Point(14.05, 98.12), Point(19.41, 97.13), Point(20.47, 97.02), Point(22.0, 96.05), Point(21.52, 95.59), Point(20.09, 94.55), Point(20.09, 92.54), Point(22.39, 93.37), Point(25.23, 97.24), Point(16.47, 94.44), Point(16.47, 96.1)]
+    generated = looper(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]], tries=5)
+    # generated = [Point(16.47, 96.1), Point(17.2, 96.29), Point(16.3, 97.38), Point(16.53, 97.38), Point(16.47, 94.44), Point(20.09, 92.54), Point(20.09, 94.55), Point(20.47, 97.02), Point(19.41, 97.13), Point(21.52, 95.59), Point(22.0, 96.05), Point(25.23, 97.24), Point(22.39, 93.37), Point(14.05, 98.12), Point(16.47, 96.1)]
+    # print([str(point) for point in generated[::-1]])
 
     saveGraph(generated, "generated")
-    straightened = looper(generated, lambda points: straightener(points), tries=2, best=Path(generated).length(), associated=generated.copy())
+    straightened = looper(generated, lambda points: straightener(points), tries=5, best=Path(generated).length(), associated=generated.copy())
     saveGraph(straightened, "straightened")
-    uncrossed = looper(straightened, lambda points: uncrosser(points), tries=2, best=Path(straightened).length(), associated=straightened.copy())
+    uncrossed = looper(straightened, lambda points: uncrosser(points), tries=10, best=Path(straightened).length(), associated=straightened.copy())
     # print([str(point) for point in uncrossed])
-    saveGraph(uncrossed, "uncrossed")
-    exit()
+    # saveGraph(uncrossed, "uncrossed")
+    straightened = looper(uncrossed, lambda points: straightener(points), tries=5, best=Path(uncrossed).length(), associated=uncrossed.copy())
+    saveGraph(straightened, "straightened2")
+    # exit()
     return Path(uncrossed)
 
 
@@ -96,29 +99,18 @@ def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
     if currentPos + 2 > len(points):
         return points
 
-    # id points 4-5 et 11-12
-
     currentSegment = Edge(points[currentPos], points[currentPos + 1])
-    # print("\n\ncurrent segment: id ", currentPos, currentPos + 1, " coords ", str(currentSegment))
+    # print("\ncurrent segment: id ", currentPos, currentPos + 1, " coords ", str(currentSegment))
     cutted = [(id + currentPos + 2, Edge(point, points[id + currentPos + 3])) for id, point in enumerate(points[currentPos + 2:-1]) if currentSegment.cross(Edge(point, points[id + currentPos + 3]))]
 
+    if currentPos > 1:
+        cutted += [(id, Edge(point, points[id + 1])) for id, point in enumerate(points[:currentPos - 2]) if currentSegment.cross(Edge(point, points[id + 1]))]
     # print([(id, id + 1, str(Edge(points[id], points[id + 1]))) for id, _ in cutted])
+
     if len(cutted) == 1:
-    #     if currentPos + 3 > len(points):
-    #         nextSegment = Edge(points[currentPos + 1], points[currentPos + 2])
-    #         nextCutted = [edge for _, edge in cutted if nextSegment.cross(edge)]
-    #     else:
-    #         nextCutted = []
-
+        # print("heavy")
         index = cutted[0][0]
-        # print(index)
 
-    #     if len(nextCutted) == 1:
-    #         if index < currentPos:
-    #             index -= 1
-    #         points.insert(index, points.pop(currentPos + 1))
-
-    #     else:
         if index < currentPos:
             begin = index + 1
             end = currentPos
@@ -126,7 +118,15 @@ def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
             begin = currentPos + 1
             end = index
         end += 1
-        # print(begin, end - 1)
+
         points[begin:end] = points[begin:end][::-1]
+
+    elif len(cutted) == 2 and cutted[0][0] + 1 == cutted[1][0]:
+        # print("light")
+        index = cutted[0][0] + 1
+
+        # supprime point plus loin pour le mettre plus près ok
+        # supprime point plus près pour le mettre plus loin à vérifier
+        points.insert(index, points.pop(currentPos + 1))
 
     return uncrosser(points, currentPos + 1)

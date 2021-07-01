@@ -29,10 +29,10 @@ def mainCycle() -> None:
     # seed = args, from str to float
     # random.seed()
 
-    # shortCycle(pointsInGrid(10, 8))
+    shortCycle(pointsInGrid(10, 8))
 
-    # print("80 points in a 8x10 grid")
-    # printResult(shortCycle(shuffle(pointsInGrid(10, 8))))
+    print("80 points in a 8x10 grid")
+    printResult(shortCycle(shuffle(pointsInGrid(10, 8))))
 
     # take 40ms to generate only
     # print("200 random points")
@@ -41,11 +41,11 @@ def mainCycle() -> None:
     print("File 14 nodes")
     printResult(shortCycle(cycle("14_nodes.txt")))
 
-    # print("File 52 nodes")
-    # printResult(shortCycle(cycle("52_nodes.txt")))
+    print("File 52 nodes")
+    printResult(shortCycle(cycle("52_nodes.txt")))
 
-    # print("File 202 nodes")
-    # printResult(shortCycle(cycle("202_nodes.txt")))
+    print("File 202 nodes")
+    printResult(shortCycle(cycle("202_nodes.txt")))
 
     # more than 1000 depth recursion allowed by python
     # print("File 1002 nodes")

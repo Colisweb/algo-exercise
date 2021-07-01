@@ -1,11 +1,5 @@
 from .Point import Point
 from math import sqrt
-# all from https://stackoverflow.com/questions/33672412/python-functools-lru-cache-with-class-methods-release-object
-# from methodtools import lru_cache  # specific for class methods ? seems intern to instance
-# from ring import lru  # seems to works as above but with sharing among all classes instances
-# from functools import cached_property  # 3.8 specific, should works as lru cache...
-
-# from functools import lru_cache  # else
 
 
 class Edge:
@@ -38,16 +32,10 @@ class Edge:
 
     def cross(self, other: object) -> bool:
         if self == other or self.from_.x == self.to.x or other.from_.x == other.to.x:
-            # if self == other or self.to == other.from_ or self.from_ == other.to:
             return False
 
-        try:
-            mSelf, bSelf = self._equation()
-            mOther, bOther = other._equation()
-        except Exception:
-            print(str(self), str(other))
-            print("fail")
-            exit()
+        mSelf, bSelf = self._equation()
+        mOther, bOther = other._equation()
 
         if mSelf == mOther:
             return False
