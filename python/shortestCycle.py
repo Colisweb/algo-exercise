@@ -10,7 +10,7 @@ def shortestCycle(points: "list[Point]") -> Path:
     return Path(looper_global_opti(looper_generate(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]])))
 
 
-def looper_generate(points: "list[Point]", method, tries: int = 50, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
+def looper_generate(points: "list[Point]", method, tries: int = 10, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
     path = Path(method(points))
     length = path.length()
 
