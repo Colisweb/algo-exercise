@@ -2,6 +2,7 @@ from domain.Edge import Edge
 from domain.Path import Path
 from domain.Point import Point
 from domain.PathProblem import PathProblem
+
 from sys import getrecursionlimit
 from itertools import groupby
 

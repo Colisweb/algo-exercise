@@ -1,4 +1,5 @@
 from .Point import Point
+
 from math import sqrt
 
 
