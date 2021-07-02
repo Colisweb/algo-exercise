@@ -22,24 +22,13 @@ def shortCycle(points: "list[Point]") -> Path:
     # np.random.seed(0)
     generated = looper_generate(points, lambda points: [points[0]] + algoProba(points[1:], points[0]) + [points[0]], tries=5)
 
-    saveGraph(generated, "generated")
-    print([str(point) for point in generated[::-1]])
+    # saveGraph(generated, "A generated")
 
-    print("straight")
-    straightened = looper_optimize(generated, lambda points: straightener(points), best=Path(generated).length(), associated=generated.copy())
-    saveGraph(straightened, "straightened")
+    optimized = looper_global_opti(generated)
+    # saveGraph(optimized, "A optimized")
 
-    # print("optimize")
-    uncrossed = looper_optimize(straightened, lambda points: uncrosser(points), best=Path(straightened).length(), associated=straightened.copy())
-    saveGraph(uncrossed, "uncrossed")
-
-    print("wide straight")
-    straightened = looper_optimize(uncrossed, lambda points: wideStraightener(points), best=Path(uncrossed).length(), associated=uncrossed.copy())
-    saveGraph(straightened, "wide straightened")
-
-    # print([str(point) for point in uncrossed])
-    exit()
-    return Path(uncrossed)
+    # exit()
+    return Path(optimized)
 
 
 def looper_generate(points: "list[Point]", method, tries: int = 20, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
@@ -54,19 +43,6 @@ def looper_generate(points: "list[Point]", method, tries: int = 20, best: float 
         return associated
 
     return looper_generate(points, method, tries - 1, best, associated)
-
-
-def looper_optimize(points: "list[Point]", method, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
-    path = Path(method(points))
-    length = path.length()
-
-    print("loop")
-    if length < best:
-        best = length
-        associated = path.points
-        return looper_optimize(points, method, best, associated)
-
-    return associated
 
 
 def algoProba(points: "list[Point]", current: Point) -> "list[Point]":
@@ -101,17 +77,27 @@ def algoProba(points: "list[Point]", current: Point) -> "list[Point]":
     return [selected] + algoProba(newPoints, selected)
 
 
-def straightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
-    if currentPos + 4 > len(points):
-        return points
+def looper_global_opti(points: "list[Point]", best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
+    uncrossed = looper_optimize(points, lambda pts: uncrosser(pts), best=Path(points).length(), associated=points.copy())
+    smallWindow = looper_optimize(uncrossed, lambda pts: straightener(pts), best=Path(uncrossed).length(), associated=uncrossed.copy())
+    largeWindow = looper_optimize(smallWindow, lambda pts: wideStraightener(pts), best=Path(smallWindow).length(), associated=smallWindow.copy())
 
-    currentWindow = points[currentPos:currentPos + 4]
+    length = Path(largeWindow).length()
 
-    if Path(currentWindow).length() > Path([currentWindow[0], currentWindow[2], currentWindow[1], currentWindow[3]]).length():
-        points[currentPos + 1] = currentWindow[2]
-        points[currentPos + 2] = currentWindow[1]
+    if length < best:
+        return looper_global_opti(largeWindow, length, largeWindow)
 
-    return straightener(points, currentPos + 1)
+    return associated
+
+
+def looper_optimize(points: "list[Point]", method, best: float = float_info.max, associated: "list[Point]" = None) -> "list[Point]":
+    path = Path(method(points))
+    length = path.length()
+
+    if length < best:
+        return looper_optimize(points, method, length, path.points)
+
+    return associated
 
 
 def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
@@ -119,12 +105,10 @@ def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
         return points
 
     currentSegment = Edge(points[currentPos], points[currentPos + 1])
-    # print("\ncurrent segment: id ", currentPos, currentPos + 1, " coords ", str(currentSegment))
     cutted = [(id + currentPos + 2, Edge(point, points[id + currentPos + 3])) for id, point in enumerate(points[currentPos + 2:-1]) if currentSegment.cross(Edge(point, points[id + currentPos + 3]))]
 
     if currentPos > 1:
         cutted += [(id, Edge(point, points[id + 1])) for id, point in enumerate(points[:currentPos - 2]) if currentSegment.cross(Edge(point, points[id + 1]))]
-    # print([(id, id + 1, str(Edge(points[id], points[id + 1]))) for id, _ in cutted])
 
     if len(cutted) == 1:
         if currentPos + 2 > len(points) and cutted[0][1].cross(Edge(points[currentPos + 1], points[currentPos + 2])):
@@ -149,13 +133,25 @@ def uncrosser(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
     return uncrosser(points, currentPos + 1)
 
 
+def straightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
+    if currentPos + 4 > len(points):
+        return points
+
+    currentWindow = points[currentPos:currentPos + 4]
+
+    if Path(currentWindow).length() > Path([currentWindow[0], currentWindow[2], currentWindow[1], currentWindow[3]]).length():
+        points[currentPos + 1] = currentWindow[2]
+        points[currentPos + 2] = currentWindow[1]
+
+    return straightener(points, currentPos + 1)
+
+
 def wideStraightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]":
     if currentPos + 5 > len(points):
         return points
 
     currentWindow = points[currentPos:currentPos + 5]
 
-    # faire une liste avec les 6 combinaisons
     combination = [[currentWindow[1], currentWindow[2], currentWindow[3]],
                    [currentWindow[1], currentWindow[3], currentWindow[2]],
                    [currentWindow[2], currentWindow[1], currentWindow[3]],
@@ -163,12 +159,10 @@ def wideStraightener(points: "list[Point]", currentPos: int = 0) -> "list[Point]
                    [currentWindow[3], currentWindow[1], currentWindow[2]],
                    [currentWindow[3], currentWindow[2], currentWindow[1]]]
 
-    # trier les combinaisons par distance et prendre le premier élément
-    best = sorted(combination, key=lambda comb: Path(comb).length())[0]
+    best = sorted(combination, key=lambda comb: Path([currentWindow[0]] + comb + [currentWindow[4]]).length())[0]
 
-    # attribuer les 3 points aveuglément (même si même points)
-    points[currentPos + 1] = best[0]
-    points[currentPos + 2] = best[1]
-    points[currentPos + 3] = best[2]
+    points[(currentPos + 1)] = best[0]
+    points[(currentPos + 2)] = best[1]
+    points[(currentPos + 3)] = best[2]
 
     return wideStraightener(points, currentPos + 1)

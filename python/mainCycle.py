@@ -19,8 +19,8 @@ def printResult(path: Path) -> None:
     xs: "list[float]" = tuple(map(lambda point: point.x, path.points))
     ys: "list[float]" = tuple(map(lambda point: point.y, path.points))
     plt.plot(xs, ys, c='orange')
-    plt.scatter(xs[1:-1], ys[1:-1], c='red', marker='x')
-    plt.scatter(xs[0], ys[0], c='blue', marker='o')
+    # plt.scatter(xs[1:-1], ys[1:-1], c='red', marker='x')
+    # plt.scatter(xs[0], ys[0], c='blue', marker='o')
     plt.title(length)
     plt.show()
 
