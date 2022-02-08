@@ -15,7 +15,7 @@ object MainPath extends App {
       .tabulate(width, height) {
         case (x, y) =>
           List(
-            Edge(from = Point(x, y), to = Point(x + 1, y)),
+            domain.Edge(from = Point(x, y), to = Point(x + 1, y)),
             domain.Edge(from = Point(x, y), to = Point(x, y + 1)),
             domain.Edge(from = Point(x, y), to = Point(x + 1, y + 1))
           )

@@ -44,7 +44,7 @@ object ReadFromResources {
     PathProblem(edges.toList, findChar('S'), findChar('E'))
   }
 
-  private def neighbors(row: Int, col: Int, lastRow: Int, lastCol: Int): Seq[Point] =
+  private def neighbors(row: Int, col: Int, lastRow: Int, lastCol: Int): Seq[Point] = // lasts really used?
     Seq((row, col + 1), (row, col - 1), (row + 1, col), (row - 1, col)).map {
       case (r, c) => Point(r, c)
     }

@@ -4,4 +4,5 @@
 .idea
 target
 
-
+__pycache__
+.vscode
